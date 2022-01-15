@@ -8,10 +8,10 @@ chai.use(chaiHttp);
 //Our parent block
 describe('root endpoint', () => {
   /*
-  * Test the /GET route
+  * Test the GET / route
   */
   describe('GET /', () => {
-      it('it should GET root endpoint', (done) => {
+      it('should GET root endpoint', (done) => {
         chai.request(server)
             .get('/')
             .end((err, res) => {

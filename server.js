@@ -4,6 +4,7 @@ const server = express()
 
 //TODO: remove warnings
 //TODO: setup db
+//TODO: refactor routing
 
 server.listen(appConfig.express_port, () => {
     let message = '(http://localhost:' + appConfig.express_port + ')'
