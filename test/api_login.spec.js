@@ -34,12 +34,13 @@ describe('/api/auth/login endpoint', () => {
           .send(player)
           .end((err, res) => {
                 res.should.have.status(400);
-                res.should.have.property('msg')
+                //debug
+                res.body.should.have.property('msg')
             done();
           });
     });
 
-    it('it should successfully login a player through POST and return 201', (done) => {
+    it('it should successfully login a player through POST and return 200', (done) => {
         let player = {
             nickname: "packer",
             password: "XjbdggT57l"
@@ -48,7 +49,7 @@ describe('/api/auth/login endpoint', () => {
           .post('/api/auth/login')
           .send(player)
           .end((err, res) => {
-                res.should.have.status(201);
+                res.should.have.status(200);
                 res.body.should.have.property('user')
             done();
           });

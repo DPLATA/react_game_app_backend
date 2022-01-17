@@ -11,7 +11,7 @@ describe('/api/auth/register endpoint', () => {
   * Test the POST /api_register route
   */
   describe('POST /api/auth/register player', () => {
-    it('should unsuccessfully create a palyer with no password through POST and return 400', (done) => {
+    it('should unsuccessfully create a player with no password through POST and return 400', (done) => {
         let player = {
             name: "Allen",
             nickname: "Lazard"
@@ -21,7 +21,7 @@ describe('/api/auth/register endpoint', () => {
           .send(player)
           .end((err, res) => {
                 res.should.have.status(400);
-                res.should.have.property('msg')
+                res.body.should.have.property('msg')
             done();
           });
     });
@@ -41,7 +41,7 @@ describe('/api/auth/register endpoint', () => {
         });
   });
 
-    it('should unsuccessfully create a palyer with repeated nickname through POST and return 400', (done) => {
+    it('should unsuccessfully create a player with repeated nickname through POST and return 400', (done) => {
       let player = {
           name: "Allen",
           nickname: "Lazard",
