@@ -24,11 +24,11 @@ server.use(express.json())
 server.use(cors())
 
 server.get('/', (req, res) => {
-  res.status(StatusCodes.OK).json({ message: 'hello world' })
+  res.status(StatusCodes.OK).json({ msg: 'hello world' })
 })
 
 server.use('/api/auth', authRouter)
-server.use('/api/players', authMiddleware, playerRouter)
+server.use('/api/players', playerRouter)
 
 server.use(notFoundMiddleWare)
 server.use(errorHandlerMiddleware)
