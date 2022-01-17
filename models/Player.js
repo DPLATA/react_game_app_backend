@@ -2,34 +2,37 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const PlayerSchema = new mongoose.Schema({
-  nickname: {
-    type: String,
-    required: [true, 'Please provide your nickname'],
+const PlayerSchema = new mongoose.Schema(
+  {
+    nickname: {
+      type: String,
+      required: [true, 'Please provide your nickname'],
+    },
+    name: {
+      type: String,
+      required: [true, 'Please provide your name'],
+    },
+    password: {
+      type: String,
+      required: [true, 'Please provide a password'],
+      minlength: [8, 'Password should be at least 8 characters'],
+    },
+    avatar: {
+      type: String,
+      enum: ['adwfasdfasd', 'asdfcasdfc'],
+      default: 'adwfasdfasd',
+    },
+    status: {
+      type: String,
+      enum: ['oro', 'plata', 'bronce'],
+      default: 'bronce',
+    },
+    ranking: {
+      type: Number,
+    },
   },
-  name: {
-    type: String,
-    required: [true, 'Please provide your name'],
-  },
-  password: {
-    type: String,
-    required: [true, 'Please provide a password'],
-    minlength: [8, 'Password should be at least 8 characters'],
-  },
-  avatar: {
-    type: String,
-    enum: ['adwfasdfasd', 'asdfcasdfc'],
-    default: 'adwfasdfasd',
-  },
-  status: {
-    type: String,
-    enum: ['oro', 'plata', 'bronce'],
-    default: 'bronce',
-  },
-  ranking: {
-    type: Number,
-  },
-})
+  { timestamps: true }
+)
 
 PlayerSchema.pre('save', async function () {
   if (!this.isModified('password')) return

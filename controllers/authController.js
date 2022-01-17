@@ -32,6 +32,9 @@ const login = async (req, res) => {
     )
   }
   const player = await Player.findOne({ nickname })
+  if (!player) {
+    throw new CustomError.NotFoundError('Nickname not found')
+  }
   const passwordMatch = await player.comparePassword(password)
   if (!passwordMatch) {
     throw new CustomError.UnauthenticatedError('Invalid credentials')
