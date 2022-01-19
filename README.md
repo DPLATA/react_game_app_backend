@@ -9,7 +9,7 @@ npm i
 Crea un archivo .env en el diretorio raiz y añadele las variables de entorno que encontraras en el archivo .example.env con un valor adecuado. Después debería funcionar el proyecto.
 
 
-```
+```bash
 npm run dev
 ```
 
