@@ -19,7 +19,6 @@ const PlayerSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      enum: ['adwfasdfasd', 'asdfcasdfc'],
       default: 'adwfasdfasd',
     },
     status: {
