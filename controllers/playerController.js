@@ -11,13 +11,19 @@ const getTopPlayers = async (req, res) => {
 const getPlayers = async (req, res) => {
   let { page } = req.query
   if (!page) {
+    page = 0
+  }
+  if (page) {
     page = 1
   }
+
+  const totalCount = await Player.estimatedDocumentCount()
   const players = await Player.find({})
     .select('-password')
+    .sort({ ranking: 1 })
     .skip(page * 100)
     .limit(100)
-  res.status(StatusCodes.OK).json({ players })
+  res.status(StatusCodes.OK).json({ players, totalCount })
 }
 
 const getSinglePlayer = async (req, res) => {
@@ -51,4 +57,49 @@ const updatePlayer = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ user: tokenUser })
 }
 
-module.exports = { getTopPlayers, getPlayers, getSinglePlayer, updatePlayer }
+const searchPlayers = async (req, res) => {
+  const { status, nicknameValue, id } = req.query
+  let { page } = req.query
+
+  if (!page) {
+    page = 1
+  }
+  page = page - 1
+
+  if (id) {
+    const idPlayer = await Player.findOne({ _id: id })
+    if (!idPlayer) {
+      throw new CustomError.NotFoundError(`No player mached for value ${id}`)
+    }
+    return res
+      .status(StatusCodes.OK)
+      .json({ players: [idPlayer], totalCount: 1 })
+  }
+
+  let queryObject = {}
+  if (status) {
+    queryObject.status = status
+  }
+  if (nicknameValue) {
+    queryObject.nickname = { $regex: nicknameValue, $options: 'i' }
+  }
+  console.log(queryObject)
+  const countSearchedPlayers = await Player.countDocuments(queryObject)
+  const searchedPlayers = await Player.find(queryObject)
+    .select('-password')
+    .sort({ ranking: 1 })
+    .limit(100)
+    .skip(page * 100)
+
+  res
+    .status(StatusCodes.OK)
+    .json({ players: searchedPlayers, totalCount: countSearchedPlayers })
+}
+
+module.exports = {
+  getTopPlayers,
+  getPlayers,
+  getSinglePlayer,
+  updatePlayer,
+  searchPlayers,
+}
