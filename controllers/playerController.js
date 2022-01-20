@@ -2,6 +2,8 @@ const Player = require('../models/Player')
 const { StatusCodes } = require('http-status-codes')
 const CustomError = require('../errors')
 const createTokenUser = require('../utils/createTokenUser')
+const { createJWT } = require('../utils/jwt')
+const { isValidObjectId } = require('../utils/checkForValidId')
 
 const getTopPlayers = async (req, res) => {
   const players = await Player.find({}).limit(10)
@@ -11,11 +13,9 @@ const getTopPlayers = async (req, res) => {
 const getPlayers = async (req, res) => {
   let { page } = req.query
   if (!page) {
-    page = 0
-  }
-  if (page) {
     page = 1
   }
+  page = page - 1
 
   const totalCount = await Player.estimatedDocumentCount()
   const players = await Player.find({})
@@ -37,7 +37,8 @@ const getSinglePlayer = async (req, res) => {
 
 const updatePlayer = async (req, res) => {
   const { id } = req.params
-  const { nickname, name } = req.body
+  const { nickname, name, avatar } = req.body
+
   if (!nickname || !name) {
     throw new CustomError.BadRequestError('Please provide nickname and name')
   }
@@ -51,14 +52,16 @@ const updatePlayer = async (req, res) => {
   }
   player.name = name
   player.nickname = nickname
+  player.avatar = avatar
   await player.save()
-
   const tokenUser = createTokenUser(player)
-  res.status(StatusCodes.CREATED).json({ user: tokenUser })
+  const token = createJWT({ payload: tokenUser })
+  res.status(StatusCodes.CREATED).json({ user: tokenUser, token })
 }
 
 const searchPlayers = async (req, res) => {
-  const { status, nicknameValue, id } = req.query
+  const { status, value } = req.query
+
   let { page } = req.query
 
   if (!page) {
@@ -66,10 +69,11 @@ const searchPlayers = async (req, res) => {
   }
   page = page - 1
 
-  if (id) {
-    const idPlayer = await Player.findOne({ _id: id })
+  if (isValidObjectId(value)) {
+    console.log('search por id')
+    const idPlayer = await Player.findOne({ _id: value })
     if (!idPlayer) {
-      throw new CustomError.NotFoundError(`No player mached for value ${id}`)
+      throw new CustomError.NotFoundError(`No player mached for value ${value}`)
     }
     return res
       .status(StatusCodes.OK)
@@ -80,8 +84,8 @@ const searchPlayers = async (req, res) => {
   if (status) {
     queryObject.status = status
   }
-  if (nicknameValue) {
-    queryObject.nickname = { $regex: nicknameValue, $options: 'i' }
+  if (value) {
+    queryObject.nickname = { $regex: value, $options: 'i' }
   }
   console.log(queryObject)
   const countSearchedPlayers = await Player.countDocuments(queryObject)

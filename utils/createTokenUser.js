@@ -5,6 +5,7 @@ const createTokenUser = (user) => {
     nickname: user.nickname,
     status: user.status,
     ranking: user.ranking,
+    avatar: user.avatar,
   }
 }
 
