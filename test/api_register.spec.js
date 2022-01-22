@@ -28,9 +28,9 @@ describe('/api/auth/register endpoint', () => {
 
     it('it should successfully POST a player ', (done) => {
       let player = {
-          name: "Geronimo Allison",
-          nickname: "packer",
-          password: "XjbdggT57l"
+          name: "Allen Lazard",
+          nickname: "packerLaFleur",
+          password: "XjbdggT57ljhbdfvF"
       }
     chai.request(server)
         .post('/api/auth/register')
@@ -43,15 +43,15 @@ describe('/api/auth/register endpoint', () => {
 
     it('should unsuccessfully create a player with repeated nickname through POST and return 400', (done) => {
       let player = {
-          name: "Allen",
+          name: "Bob",
           nickname: "Lazard",
-          password: "mypassword"
+          password: "flyingsaucer123"
       }
 
       let repeated_player = {
-        name: "Allen",
+        name: "Bob",
         nickname: "Lazard",
-        password: "mypassword"
+        password: "flyingSaucer123"
       }
 
       chai.request(server)
