@@ -7,6 +7,7 @@ const PlayerSchema = new mongoose.Schema(
     nickname: {
       type: String,
       required: [true, 'Please provide your nickname'],
+      unique: [true, 'Nickname already exists'],
     },
     name: {
       type: String,
