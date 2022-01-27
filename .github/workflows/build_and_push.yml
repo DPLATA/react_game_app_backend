@@ -1,0 +1,33 @@
+# This workflow builds and pushes docker container to dockerhub
+
+name: CD
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches:
+      - main
+      - develop
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build_and_push_docker_container:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check out code
+      - uses: actions/checkout@v2
+      
+      # Builds and pushes docker container to docker hub
+      - name: Build and push Docker images
+      - uses: docker/build-push-action@v2.8.0
+      - with:
+        - username: ${{secrets.DOCKER_USERNAME}}
+        - password: ${{secrets.DOCKER_PASSWORD}}
+        - repository: dgplatac/express_backend
+        - tags: latest, ${{github.run_number}}
