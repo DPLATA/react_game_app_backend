@@ -24,8 +24,6 @@ const authRouter = require('./routes/authRoutes')
 const playerRouter = require('./routes/playerRoutes')
 
 server.use(helmet())
-server.use(xss())
-server.use(mongoSanitize())
 
 server.use(morgan('tiny'))
 server.use(express.json())
