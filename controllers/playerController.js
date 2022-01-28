@@ -6,7 +6,10 @@ const { createJWT } = require('../utils/jwt')
 const { isValidObjectId } = require('../utils/checkForValidId')
 
 const getTopPlayers = async (req, res) => {
-  const players = await Player.find({}).limit(10)
+  const players = await Player.find({})
+    .sort({ ranking: 1 })
+    .select('-password')
+    .limit(10)
   res.status(StatusCodes.OK).json({ players })
 }
 
