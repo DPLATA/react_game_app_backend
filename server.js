@@ -23,13 +23,6 @@ const { StatusCodes } = require('http-status-codes')
 const authRouter = require('./routes/authRoutes')
 const playerRouter = require('./routes/playerRoutes')
 
-server.set('trust proxy', 1)
-server.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000,
-    max: 60,
-  })
-)
 server.use(helmet())
 server.use(xss())
 server.use(mongoSanitize())
