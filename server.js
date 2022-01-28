@@ -23,8 +23,6 @@ const { StatusCodes } = require('http-status-codes')
 const authRouter = require('./routes/authRoutes')
 const playerRouter = require('./routes/playerRoutes')
 
-server.use(helmet())
-
 server.use(morgan('tiny'))
 server.use(express.json())
 server.use(cors())
