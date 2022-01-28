@@ -10,6 +10,9 @@ const connectDB = require('./db/connect')
 const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
+const rateLimiter = require('express-rate-limit')
+const xss = require('xss-clean')
+const mongoSanitize = require('express-mongo-sanitize')
 
 //middleware
 const notFoundMiddleWare = require('./middleware/not-found')
@@ -20,7 +23,16 @@ const { StatusCodes } = require('http-status-codes')
 const authRouter = require('./routes/authRoutes')
 const playerRouter = require('./routes/playerRoutes')
 
+server.set('trust proxy', 1)
+server.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+  })
+)
 server.use(helmet())
+server.use(xss())
+server.use(mongoSanitize())
 
 server.use(morgan('tiny'))
 server.use(express.json())
