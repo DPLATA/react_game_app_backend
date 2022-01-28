@@ -9,6 +9,7 @@ const connectDB = require('./db/connect')
 //packages
 const morgan = require('morgan')
 const cors = require('cors')
+const helmet = require('helmet')
 
 //middleware
 const notFoundMiddleWare = require('./middleware/not-found')
@@ -18,6 +19,8 @@ const { StatusCodes } = require('http-status-codes')
 //routers
 const authRouter = require('./routes/authRoutes')
 const playerRouter = require('./routes/playerRoutes')
+
+server.use(helmet())
 
 server.use(morgan('tiny'))
 server.use(express.json())
